@@ -6,18 +6,18 @@ clear all;
 %04 artefatto
 %06 artefatto
 %07 artefatto
-%08 artefatto
+%08 artefatto -> rimane
 %09 artefatto
-%10 artefatto
+%10 artefatto -> rimane
 %11 artefatto
 %13 artefatto
 
 
 
-imB = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-03.jpg");
-imN = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-10.jpg");
-imL = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-24.jpg");
-imBg = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-16.jpg");
+imB = imread("/home/diego/coco-annotator/datasets/dataset/UNO/uno-test-20.jpg");
+%imN = imread("/home/diego/coco-annotator/datasets/dataset/UNO/uno-test-10.jpg");
+%imL = imread("/home/diego/coco-annotator/datasets/dataset/UNO/uno-test-24.jpg");
+%imBg = imread("/home/diego/coco-annotator/datasets/dataset/UNO/uno-test-16.jpg");
 
 im = imB;
 
@@ -56,14 +56,34 @@ closeBW = imclose(imbb,se);
 
 
 BW = imfill(closeBW,"holes");
+BW = bwareaopen(BW, 25000);
 edd = edge(BW, "sobel");
 pv = imfill(imbb,"holes");
 
+labels = bwlabel(BW);
+ 
+nlabels = max(max(labels));
+% minarea = inf;
+% thresh = 25000;
+for r = 1 : nlabels
+    area = sum(sum(labels == r));
+     fprintf("AAAAAAA, %d \n", area);
+%     if area < thresh
+%         labels(labels == r) = 0;
+%     end
+ end
+% BW = labels > 0;
 gg = repmat(BW,[1,1,3]);
+
+sol = immultiply(im, repmat(BW,[1,1,3]));
+
+edsol = edge(sol(:,:,3),"sobel");
+
+sasso = ~BW + edsol;
 
 figure(1);
 subplot(2,2,1);
-imshow(immultiply(im, repmat(BW,[1,1,3])));
+imshow(sasso);
 subplot(2,2,2);
 imshow(imbb);
 subplot(2,2,3);
