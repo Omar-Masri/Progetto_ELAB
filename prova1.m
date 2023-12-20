@@ -14,7 +14,7 @@ clear all;
 
 
 
-imB = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-30.jpg");
+imB = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-03.jpg");
 imN = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-21.jpg");
 imL = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-22.jpg");
 imBg = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-23.jpg");
@@ -53,47 +53,19 @@ imbb = bwareaopen(imbb,1500);
 
 se = strel("square",3);
 
-BW = imfill(imbb,"holes");
+BW = myImFill(imbb);
 BW = bwareaopen(BW, 25000);
 BW = imclose(BW,se);
 edd = edge(BW, "sobel");
-
-col1 = find(BW(1, :), 1, 'first')
-col2 = find(BW(1, :), 1, 'last')
-BW(1, col1:col2) = true;
-% Make bottom line white:
-col1 = find(BW(end, :), 1, 'first')
-col2 = find(BW(end, :), 1, 'last')
-BW(end, col1:col2) = true;
-% Make right line white:
-row1 = find(BW(:, end), 1, 'first')
-row2 = find(BW(:, end), 1, 'last')
-BW(row1:row2, end) = true;
-% Make left line white:
-row1 = find(BW(1, :), 1, 'first')
-row2 = find(BW(1, :), 1, 'last')
-BW(1, row1:row2) = true;
-BW = imfill(BW, 'holes');
-
-
-[labels, nlabels] = bwlabel(BW);
-fprintf("-------------------------------\n");
-for r = 1 : nlabels
-    area = sum(sum(labels == r));
-     fprintf("AAAAAAA, %d \n", area);
-%     if area < thresh
-%         labels(labels == r) = 0;
-%     end
-end
-fprintf("-------------------------------\n");
 
 ed = edge(BW, "sobel", "nothinning");
 
 L = imsegkmeans(im2uint8(imm(:,:,1)),5);
 B = labeloverlay(im2uint8(imm),L);
 
-blobs = regionprops(labels, 'BoundingBox');
+labels = bwlabel(BW);
 
+blobs = regionprops(labels, 'BoundingBox');
 
 figure(1);
 subplot(2,2,1);
