@@ -25,8 +25,8 @@ function [BW] = Binarize(im)
     
     se = strel("square",3);
     
-    BW = myImFill(imbb);
+    BW = imclose(imbb,se);
+    BW = myImFill(BW);
     BW = bwareaopen(BW, 25000);
-    BW = imclose(BW,se);
 end
 
