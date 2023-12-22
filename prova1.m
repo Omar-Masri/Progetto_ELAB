@@ -14,7 +14,7 @@ clear all;
 
 
 
-imB = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-03.jpg");
+imB = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-20.jpg");
 imN = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-21.jpg");
 imL = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-22.jpg");
 imBg = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-23.jpg");
@@ -53,10 +53,13 @@ imbb = bwareaopen(imbb,1500);
 
 se = strel("square",3);
 
-BW = myImFill(imbb);
+BW = imclose(imbb,se);
+
+BW = myImFill(BW);
+
 BW = bwareaopen(BW, 25000);
-BW = imclose(BW,se);
 edd = edge(BW, "sobel");
+%BW = myImFill(BW);
 
 ed = edge(BW, "sobel", "nothinning");
 
