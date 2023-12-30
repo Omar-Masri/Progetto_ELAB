@@ -13,8 +13,8 @@ clear all;
 %13 artefatto
 
 
-
-imB = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-20.jpg");
+tic;
+imB = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-17.jpg");
 imN = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-21.jpg");
 imL = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-22.jpg");
 imBg = imread("/home/omarm/Desktop/UNIMIB/Elab/Progetto/coco-annotator/datasets/UNO-GT/UNO/uno-test-23.jpg");
@@ -55,7 +55,9 @@ se = strel("square",3);
 
 BW = imclose(imbb,se);
 
+tic;
 BW = myImFill(BW);
+toc;
 
 BW = bwareaopen(BW, 25000);
 edd = edge(BW, "sobel");
@@ -70,13 +72,23 @@ labels = bwlabel(BW);
 
 blobs = regionprops(labels, 'BoundingBox');
 
+B = bwboundaries(BW); % look more into this function it's intresting
+toc;
+
 figure(1);
 subplot(2,2,1);
 imagesc(L);
 subplot(2,2,2);
 imshow(imbb);
-rectangle('Position',blobs(5).BoundingBox,'Edgecolor','g');
 subplot(2,2,3);
-imshow(imbc);
+imshow(ed);
 subplot(2,2,4);
 imshow(BW);
+
+figure(2), hold on;
+imshow(edge(imbb, "sobel", "nothinning"));
+rectangle('Position',blobs(5).BoundingBox,'Edgecolor','g'); hold on;
+for row = 1:height(B)
+    [P,av] = convhull(B{row,1}, 'Simplify',true);
+    plot(B{row,1}(P,2), B{row,1}(P,1),'LineWidth',2);
+end
