@@ -22,13 +22,17 @@ function HoughDemo
   imedge = edge(imgray,'Canny', [], 3);
    %imedge = imgray;
   imedge = imfill(imedge, "holes");
+
   imedge = bwareaopen(imedge,35000);
+
   imedge = edge(imedge,'sobel', "nothinning");
   figure,imshow(imedge),title('Immagine degli edge');
   
   
   % Applichiamo la trasformata di hough per le linee
-  % H è l'immagine dello spazio dei parametri (rho,theta)==(y,x)
+
+  % H � l'immagine dello spazio dei parametri (rho,theta)==(y,x)
+
   % H contiene le evidenze che una coppia (rho, theta) corrisponda ad una
   % linea presente nell'immagine degli edge. Valori alti significano forti
   % evidenze.
@@ -51,7 +55,9 @@ function HoughDemo
   if(mod(val(2), 2) == 0);
     val(2) = val(2) + 1;
   end
+
   coords = houghpeaks(H, 8, Threshold=0, NHoodSize=val);
+
   rhos   = R(coords(:,1));
   thetas = T(coords(:,2));
   
@@ -67,8 +73,7 @@ function HoughDemo
   % il cartello. Cerchiamo le intersezioni tra le linee (funzioni scritte sotto).
   XY=find_intersection_points(rhos,thetas,rows,cols);
   draw_intersection_points(imedge,XY);
-  
-  % Raddrizziamo il cartello stradale (da fare, la funzione è scritta sotto)
+
   rotate_sign(imedge,XY);
 end
 

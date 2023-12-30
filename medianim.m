@@ -14,6 +14,6 @@ function [outim] = medianim(annotationsFileName)
 
         X(:,:,:,k1) = im;
     end
-
+    X = im2double(X);
     outim = median(X,4);
 end
