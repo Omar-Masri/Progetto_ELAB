@@ -1,5 +1,5 @@
 close all;
-mrgb = imread("C:\Users\pirov\Desktop\UNIMIB\elaborazione immagini\dataset\uno-test-16.jpg");
+mrgb = imread(".\UNO\uno-test-01.jpg");
 mn = load("mean.mat");
 test = im2double(mrgb) - mn.ans;
 test = imbinarize(im2gray(test));
