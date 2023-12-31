@@ -57,7 +57,7 @@ function [cards, labels] = readlists(annotationsFileName, createCards )
                 col2 = max(c);
                 croppedIm = res(row1:row2, col1:col2, :);
                 %%%%%% < ricordati di imcrop
-                croppedIm = imresize(croppedIm, 0.5);
+                croppedIm = imresize(croppedIm, 1);
                 imwrite(croppedIm, path);
             end
 
