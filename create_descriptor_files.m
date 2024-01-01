@@ -1,7 +1,8 @@
 function create_descriptor_files()
   % Calcola i descrittori delle immagini e li salva su file.
+  %nlab*nlab
 
-  [cards, labels] = readlists("UNO-GT-nocolor.json", true);
+  [cards, labels] = readlists("UNO-GT-nocolor.json");
     
   ncards = size(cards, 1);
   
@@ -10,6 +11,7 @@ function create_descriptor_files()
   qhist = [];
   sift = [];
   surf = [];
+  kaze = [];
   hog = [];
 
   for n = 1 : ncards
@@ -27,8 +29,11 @@ function create_descriptor_files()
 
     sPt = detectSIFTFeatures(rgb2gray(im));
     ssur = detectSURFFeatures(rgb2gray(im));
+    kz = detectKAZEFeatures(rgb2gray(im));
+
     sift = [sift;extractFeatures(gim,sPt, Method="SIFT")];
     surf = [surf;extractFeatures(gim,ssur, Method="SURF")];
+    kaze = [kaze;extractFeatures(gim,kz, Method="KAZE")];
 
     %sift = [sift; detectSIFTFeatures(rgb2gray(im))];
     %surf = [surf; detectSURFTeatures(rgb2gray(im))];
@@ -45,11 +50,13 @@ function create_descriptor_files()
 
   nlab = numel(val);
 
-  [idx,C] = kmeans(sift,nlab, MaxIter=128*1000);
-  [idxu,Cu] = kmeans(surf,nlab, MaxIter=128*1000);
+  [idx,C] = kmeans(sift,nlab*nlab, MaxIter=128*1000);
+  [idxu,Cu] = kmeans(surf,nlab*nlab, MaxIter=128*1000);
+  [idxk,Ck] = kmeans(kaze,nlab*nlab, MaxIter=128*1000);
 
   vsift = [];
   vsurf = [];
+  vkaze = [];
 
   for n = 1 : ncards
     im = imread(cards{n});
@@ -63,9 +70,10 @@ function create_descriptor_files()
 
     norm = size(idx_test,1);
 
-    v = accumarray(idx_test, 1, [nlab 1])' ./ norm;
+    v = accumarray(idx_test, 1, [nlab*nlab 1])' ./ norm;
 
     vsift = [vsift; v];
+
 
     ssur = detectSURFFeatures(rgb2gray(im));
     ss = extractFeatures(gim,ssur, Method="SURF");
@@ -76,12 +84,26 @@ function create_descriptor_files()
 
     norm = size(idx_test,1);
 
-    v = accumarray(idx_test, 1, [nlab 1])' ./ norm;
+    v = accumarray(idx_test, 1, [nlab*nlab 1])' ./ norm;
 
     vsurf = [vsurf; v];
 
+
+    kz = detectKAZEFeatures(rgb2gray(im));
+    ss = extractFeatures(gim,sPt, Method="KAZE");
+
+    [~,idx_test] = pdist2(Ck,ss,'euclidean','Smallest',1);
+
+    idx_test = idx_test';
+
+    norm = size(idx_test,1);
+
+    v = accumarray(idx_test, 1, [nlab*nlab 1])' ./ norm;
+
+    vkaze = [vkaze; v];
+
   end
   
-  save('data','lbp', "cedd", "qhist", "cards", "labels", "vsift", "vsurf");
+  save('data','lbp', "cedd", "qhist", "cards", "labels", "vsift", "vsurf", "vkaze");
   
 end

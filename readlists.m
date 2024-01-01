@@ -58,7 +58,25 @@ function [cards, labels] = readlists(annotationsFileName, createCards )
                 croppedIm = res(row1:row2, col1:col2, :);
                 %%%%%% < ricordati di imcrop
                 croppedIm = imresize(croppedIm, 1);
-                imwrite(croppedIm, path);
+
+                angle = horizon(BW(row1:row2, col1:col2, :), 0.1, 'hough');
+                rota = imrotate(croppedIm, -angle, 'bicubic');
+                prota = rgb2gray(rota) > 40;
+                prota = imfill(prota, "holes");
+
+                [r, c] = find(prota);
+                row1 = min(r);
+                row2 = max(r);
+                col1 = min(c);
+                col2 = max(c);
+
+                rota = rota(row1:row2, col1:col2, :);
+
+                if(size(rota,2) > size(rota,1))
+                    rota = rot90(rota);
+                end
+
+                imwrite(rota, path);
             end
 
             counter = counter + 1;

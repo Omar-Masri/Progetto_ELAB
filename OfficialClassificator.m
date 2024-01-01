@@ -22,7 +22,7 @@ test.vsift = vsift(cv.test(1), :);
 test.vsurf = vsurf(cv.test(1), :);
 
 
-T = table(vsift, labels);
+T = table([vsift, vsurf ,vkaze], labels);
 % SIFT
 % HOG
 
