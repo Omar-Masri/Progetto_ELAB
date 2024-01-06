@@ -75,10 +75,12 @@ function [cards, labels] = readlists(annotationsFileName, createCards )
                 if(size(rota,2) > size(rota,1))
                     rota = rot90(rota);
                 end
-
+                %if size(rota, 1) >= 60 & size(rota, 2) >= 60 
+                %    rota = [rota(1:60, 1:60, :), rota(end-59:end, end-59:end, :)];
+                %end
                 imwrite(rota, path);
             end
-
+           
             counter = counter + 1;
         end 
     end

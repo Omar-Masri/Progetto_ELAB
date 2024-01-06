@@ -21,8 +21,8 @@ test.cedd = cedd(cv.test(1), :);
 test.vsift = vsift(cv.test(1), :);
 test.vsurf = vsurf(cv.test(1), :);
 
-
-T = table([vsift, vsurf ,vkaze], labels);
+aaa = [vsift, vsurf ,vkaze];
+T = table(aaa, labels);
 % SIFT
 % HOG
 
