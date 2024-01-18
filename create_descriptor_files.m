@@ -12,37 +12,33 @@ function create_descriptor_files()
   sift = [];
   surf = [];
   kaze = [];
-  hog = [];
+  eul = [];
+  area = [];
+  nconn = [];
+  perimeter = [];
+  orientation = [];
+  convexArea = [];
+  circularity = [];
 
   for n = 1 : ncards
     disp(n);
     im = imread(cards{n});
 
-    resim = imresize(im, [150,150]);
+    [lb, ce, qh, si, su, ka, eu, ar, nc, pe, or, co, ci] = create_descriptor(im);
 
-    gim = rgb2gray(im);
-
-    lbp   = [lbp;compute_lbp(im)];
-    cedd  = [cedd;compute_CEDD(im)];
-    qhist = [qhist;compute_qhist(im)];
-    %im = im2double(im);
-
-    sPt = detectSIFTFeatures(rgb2gray(im));
-    ssur = detectSURFFeatures(rgb2gray(im));
-    kz = detectKAZEFeatures(rgb2gray(im));
-
-    sift = [sift;extractFeatures(gim,sPt, Method="SIFT")];
-    surf = [surf;extractFeatures(gim,ssur, Method="SURF")];
-    kaze = [kaze;extractFeatures(gim,kz, Method="KAZE")];
-
-    %sift = [sift; detectSIFTFeatures(rgb2gray(im))];
-    %surf = [surf; detectSURFTeatures(rgb2gray(im))];
-    
-    %per ora non fattibile così>>>>>>>>>>>
-    %hog = [hog; extractHOGFeatures(im, "CellSize", [10, 10])];
-    g = size(gim, 1);
-    s = floor(size(gim, 1)/ 10);
-    %hog =extractHOGFeatures(resim, "CellSize", [ceil(size(gim, 1)/ 10), ceil(size(gim, 2)/ 10)]);
+    lbp   = [lbp; lb];
+    cedd  = [cedd; ce];
+    qhist = [qhist; qh];
+    sift = [sift; si];
+    surf = [surf; su];
+    kaze = [kaze; ka];
+    eul = [eul; eu];
+    area = [area; ar];
+    nconn = [nconn; nc];
+    perimeter = [perimeter; pe];
+    orientation = [orientation; or];
+    convexArea = [convexArea; co];
+    circularity = [circularity; ci];
 
   end
 
@@ -60,8 +56,9 @@ function create_descriptor_files()
 
   for n = 1 : ncards
     im = imread(cards{n});
+    gim = imclearborder(imbinarize(rgb2gray(im)));
 
-    sPt = detectSIFTFeatures(rgb2gray(im));
+    sPt = detectSIFTFeatures(gim);
     ss = extractFeatures(gim,sPt, Method="SIFT");
 
     [~,idx_test] = pdist2(C,ss,'euclidean','Smallest',1);
@@ -75,7 +72,7 @@ function create_descriptor_files()
     vsift = [vsift; v];
 
 
-    ssur = detectSURFFeatures(rgb2gray(im));
+    ssur = detectSURFFeatures(gim);
     ss = extractFeatures(gim,ssur, Method="SURF");
 
     [~,idx_test] = pdist2(Cu,ss,'euclidean','Smallest',1);
@@ -89,7 +86,7 @@ function create_descriptor_files()
     vsurf = [vsurf; v];
 
 
-    kz = detectKAZEFeatures(rgb2gray(im));
+    kz = detectKAZEFeatures(gim);
     ss = extractFeatures(gim,sPt, Method="KAZE");
 
     [~,idx_test] = pdist2(Ck,ss,'euclidean','Smallest',1);
@@ -104,6 +101,6 @@ function create_descriptor_files()
 
   end
   
-  save('data','lbp', "cedd", "qhist", "cards", "labels", "vsift", "vsurf", "vkaze");
+  save('data','lbp', "cedd", "qhist", "cards", "labels", "vsift", "vsurf", "vkaze", "eul", "area", "perimeter", "orientation", "convexArea", "circularity", "nconn");
   
 end

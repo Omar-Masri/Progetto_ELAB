@@ -1,13 +1,5 @@
 function [train_perf, test_perf] = test_classifier(descriptor, labels, cv)
-  % Testa un classificatore con i dati descrittori e partizionamento.
-  % Paramnetri: 
-  %   descriptor : descrittore/i da usareper la classificazione
-  %   labels : etichette dell eimmagini
-  %   cv : output di cvpartition con le partizioni train set / test set
-  %
-  %   Ritorna le performance del classificatore in fase di training e in
-  %   fase di test
-  
+
   
   train_values = descriptor(cv.training,:);
   train_labels = labels(cv.training);
