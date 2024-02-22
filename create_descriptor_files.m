@@ -2,7 +2,7 @@ function create_descriptor_files()
   % Calcola i descrittori delle immagini e li salva su file.
   %nlab*nlab
 
-  [cards, labels] = readlists("UNO-GT-nocolor.json");
+  [cards, labels] = readlists("UNO-GT-onlycolor.json");
     
   ncards = size(cards, 1);
   
@@ -100,6 +100,8 @@ function create_descriptor_files()
     vkaze = [vkaze; v];
 
   end
+
+  
   
   save('data','lbp', "cedd", "qhist", "cards", "labels", "vsift", "vsurf", "vkaze", "eul", "area", "perimeter", "orientation", "convexArea", "circularity", "nconn");
   

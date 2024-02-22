@@ -99,7 +99,10 @@ function create_training_descriptor_files(cards, labels)
     vkaze = [vkaze; v];
 
   end
+
+  labelsCard = cellfun(@(S) S(2:end), labels, 'Uniform', 0);
+  labelsColor = cellfun(@(S) S(1:end-1), labels, 'Uniform', 0);
   
-  save('data_training','lbp', "cedd", "qhist", "cards", "labels", "vsift", "vsurf", "vkaze", "eul", "areas", "perimeter", "orientation", "convexArea", "circularity", "nconn");
+  save('data_training','lbp', "cedd", "qhist", "cards", "labels", "labelsCard", "labelsColor", "vsift", "vsurf", "vkaze", "eul", "areas", "perimeter", "orientation", "convexArea", "circularity", "nconn");
   
 end
