@@ -17,12 +17,13 @@ function create_training_descriptor_files(cards, labels)
   orientation = [];
   convexArea = [];
   circularity = [];
+  huMoments = [];
 
   for n = 1 : ncards
     fprintf('%3.0f%%', n/ncards * 100);
     im = imread(cards{n});
 
-    [lb, ce, qh, si, su, ka, eu, ar, nc, pe, or, co, ci] = create_descriptor(im);
+    [lb, ce, qh, si, su, ka, eu, ar, nc, pe, or, co, ci, hu] = create_descriptor(im);
 
     lbp   = [lbp; lb];
     cedd  = [cedd; ce];
@@ -37,6 +38,7 @@ function create_training_descriptor_files(cards, labels)
     orientation = [orientation; or];
     convexArea = [convexArea; co];
     circularity = [circularity; ci];
+    huMoments = [huMoments; hu];
 
     fprintf('\b\b\b\b');
   end
@@ -77,7 +79,7 @@ function create_training_descriptor_files(cards, labels)
   labelsCard = cellfun(@(S) S(2:end), labels, 'Uniform', 0);
   labelsColor = cellfun(@(S) S(1:end-1), labels, 'Uniform', 0);
   
-  save('data_training.mat','lbp', "cedd", "qhist", "cards", "labels", "labelsCard", "labelsColor", "vsift", "vsurf", "vkaze", "eul", "areas", "perimeter", "orientation", "convexArea", "circularity", "nconn");
+  save('data_training.mat','lbp', "cedd", "qhist", "cards", "labels", "labelsCard", "labelsColor", "vsift", "vsurf", "vkaze", "eul", "areas", "perimeter", "orientation", "convexArea", "circularity", "nconn", "huMoments");
   save("BagOfFeatures.mat", "nlab", "Cs", "Cu", "Ck");
   
 end

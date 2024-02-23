@@ -3,7 +3,7 @@ close all;
 
 [cards, labels] = readlists("UNO-GT.json");
 
-create_training_descriptor_files(cards, labels);
+%create_training_descriptor_files(cards, labels);
 
 load("data_training.mat");
 
@@ -25,7 +25,7 @@ test.qhist = qhist(cv.test(1), :);
 test.vsift = vsift(cv.test(1), :);
 test.vsurf = vsurf(cv.test(1), :);
 
-aaa = [lbp, areas, eul, perimeter, orientation, convexArea, circularity, nconn];
+aaa = [areas, eul, perimeter, orientation, convexArea, circularity, nconn, huMoments];
 T = table(aaa, labelsCard);
 % SIFT
 % HOG

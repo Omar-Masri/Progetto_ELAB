@@ -1,7 +1,7 @@
 function [features, labelsCard, T] = ClassificatorCards()
     load("data_training.mat");
     
-    features = [lbp, areas, eul, perimeter, orientation, convexArea, circularity, nconn];
+    features = [areas, eul, perimeter, orientation, convexArea, circularity, nconn, huMoments];
     T = table(features, labelsCard);
   
 end
