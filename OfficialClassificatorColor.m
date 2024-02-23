@@ -25,7 +25,7 @@ test.qhist = qhist(cv.test(1), :);
 test.vsift = vsift(cv.test(1), :);
 test.vsurf = vsurf(cv.test(1), :);
 
-aaa = [lbp, areas, eul, perimeter, orientation, convexArea, circularity, nconn];
-T = table(aaa, labelsCard);
+aaa = [qhist];
+T = table(aaa, labelsColor);
 % SIFT
 % HOG

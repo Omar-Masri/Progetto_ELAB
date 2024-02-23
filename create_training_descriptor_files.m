@@ -45,9 +45,9 @@ function create_training_descriptor_files(cards, labels)
 
   nlab = numel(val);
 
-  [idx,C] = kmeans(sift,nlab*nlab, MaxIter=128*1000);
-  [idxu,Cu] = kmeans(surf,nlab*nlab, MaxIter=128*1000);
-  [idxk,Ck] = kmeans(kaze,nlab*nlab, MaxIter=128*1000);
+  [idx,Cs] = kmeans(sift,nlab*4, MaxIter=128*1000);
+  [idxu,Cu] = kmeans(surf,nlab*4, MaxIter=128*1000);
+  [idxk,Ck] = kmeans(kaze,nlab*4, MaxIter=128*1000);
 
   vsift = [];
   vsurf = [];
@@ -58,51 +58,26 @@ function create_training_descriptor_files(cards, labels)
     gim = imclearborder(imbinarize(rgb2gray(im)));
 
     sPt = detectSIFTFeatures(gim);
-    ss = extractFeatures(gim,sPt, Method="SIFT");
-
-    [~,idx_test] = pdist2(C,ss,'euclidean','Smallest',1);
-
-    idx_test = idx_test';
-
-    norm = size(idx_test,1);
-
-    v = accumarray(idx_test, 1, [nlab*nlab 1])' ./ norm;
-
-    vsift = [vsift; v];
-
-
+    ssi = extractFeatures(gim,sPt, Method="SIFT");
     ssur = detectSURFFeatures(gim);
-    ss = extractFeatures(gim,ssur, Method="SURF");
-
-    [~,idx_test] = pdist2(Cu,ss,'euclidean','Smallest',1);
-
-    idx_test = idx_test';
-
-    norm = size(idx_test,1);
-
-    v = accumarray(idx_test, 1, [nlab*nlab 1])' ./ norm;
-
-    vsurf = [vsurf; v];
-
-
+    ssu = extractFeatures(gim,ssur, Method="SURF");
     kz = detectKAZEFeatures(gim);
-    ss = extractFeatures(gim,sPt, Method="KAZE");
+    ssk = extractFeatures(gim,sPt, Method="KAZE");
 
-    [~,idx_test] = pdist2(Ck,ss,'euclidean','Smallest',1);
+    [si, su, ka] = calculate_features(ssi, ssu, ssk, nlab, Cs, Cu, Ck);
 
-    idx_test = idx_test';
+    vsift = [vsift; si];
 
-    norm = size(idx_test,1);
+    vsurf = [vsurf; su];
 
-    v = accumarray(idx_test, 1, [nlab*nlab 1])' ./ norm;
-
-    vkaze = [vkaze; v];
+    vkaze = [vkaze; ka];
 
   end
 
   labelsCard = cellfun(@(S) S(2:end), labels, 'Uniform', 0);
   labelsColor = cellfun(@(S) S(1:end-1), labels, 'Uniform', 0);
   
-  save('data_training','lbp', "cedd", "qhist", "cards", "labels", "labelsCard", "labelsColor", "vsift", "vsurf", "vkaze", "eul", "areas", "perimeter", "orientation", "convexArea", "circularity", "nconn");
+  save('data_training.mat','lbp', "cedd", "qhist", "cards", "labels", "labelsCard", "labelsColor", "vsift", "vsurf", "vkaze", "eul", "areas", "perimeter", "orientation", "convexArea", "circularity", "nconn");
+  save("BagOfFeatures.mat", "nlab", "Cs", "Cu", "Ck");
   
 end
